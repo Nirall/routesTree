@@ -21,6 +21,5 @@ const persistConfig = {
 const pReducer = persistReducer<any, any>(persistConfig, rootReducer);
 const store = createStore(pReducer);
 const persistor = persistStore(store);
-persistor.purge();
 
 export { persistor, store };
