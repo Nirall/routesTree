@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# Routes tree
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a studing project
 
 ## Available Scripts
 
