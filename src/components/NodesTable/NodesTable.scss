@@ -1,0 +1,10 @@
+.nodes-table {
+  max-width: 700px;
+  padding: 10px;
+  flex-grow: 1;
+  color: var(--color-secondary);
+
+  &__title {
+    margin: 0 0 10px 0;
+  }
+}

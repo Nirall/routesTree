@@ -1,9 +1,9 @@
-import {
-  ADD_ROUTE,
-  REMOVE_ROUTE,
-} from '../actionTypes';
-import { matchNode } from '../helpers';
+import { Reducer } from 'redux';
+
+import { ADD_ROUTE, REMOVE_ROUTE } from '../actionTypes';
 import { isAddRouteData, TreeActionsTypes } from '../actionCreators';
+import { matchNode } from '../../helpers';
+import { RouteObjType } from '../../namespace';
 
 const initialState = {
   route: '/main',
@@ -58,7 +58,7 @@ const initialState = {
 }
 */
 
-const routesTree = (state = initialState, action: TreeActionsTypes) => {
+const routesTree: Reducer<RouteObjType, TreeActionsTypes> = (state = initialState, action): RouteObjType => {
   switch (action.type) {
     case ADD_ROUTE:
       if (isAddRouteData(action.payload)) {
@@ -87,7 +87,13 @@ const routesTree = (state = initialState, action: TreeActionsTypes) => {
         const parentNode = matchNode(parentPath, snapTree);
         const routeNode = matchNode(pathToRemove, snapTree);
         if (routeNode !== null && parentNode !== null) {
-          const routeNodesArr = routeNode.nodes;
+          let routeNodesArr = routeNode.nodes;
+          routeNodesArr = routeNodesArr.filter((routeNode) => {
+            return parentNode.nodes.every((parentNode) => {
+              return parentNode.route !== routeNode.route;
+            })
+          });
+
           parentNode.nodes = [...parentNode.nodes.filter((node) => node !== routeNode), ...routeNodesArr];
 
           return snapTree;

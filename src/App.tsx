@@ -1,183 +1,67 @@
-import React, {useState, useEffect} from 'react';
-import { RootState } from './redux';
+import { useLocation } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { block } from 'bem-cn';
 
-import {
-  Link,
-  useLocation
-} from 'react-router-dom';
+import './App.scss';
+import { RootState } from './store';
+import { RouteObjType } from './namespace';
+import { flatTree } from './helpers';
+import { themeSwitcher } from './theme/themeSwitcher';
+import { removeRoute, setCurrentNode } from './store/actionCreators';
 
-import {
-  useSelector,
-  useDispatch
-} from 'react-redux';
+import Header from './components/Header/Header';
+import NodesTable from './components/NodesTable/NodesTable';
+import LinksList from './components/LinksList/LinksList';
+import FormAddRoute from './components/FormAddRoute/FormAddRoute';
+import Footer from './components/Footer/Footer';
 
-import { addRoute, removeRoute } from './redux/actionCreators';
-import { flatTree } from './redux/helpers';
-
-/*
-const routesExample = {
-  route: '/main',
-  title: 'main',
-  nodes: [
-    {
-      route: '/posts',
-      title: 'posts',
-      nodes: [
-        {
-          route: '/user',
-          title: 'userPosts',
-          nodes: []
-        },
-        {
-          route: '/admin',
-          title: 'adminPosts',
-          nodes: [
-            {
-              route: '/1',
-              title: '1stPost',
-              nodes: []
-            },
-            {
-              route: '/2',
-              title: '2ndPost',
-              nodes: []
-            }
-          ]
-        }
-      ]
-    },
-    {
-      route: '/images',
-      title: 'images',
-      nodes: [
-        {
-          route: '/admin',
-          title: 'adminImages',
-          nodes: []
-        }
-      ]
-    }
-  ]
-}
-*/
 
 const App = () => {
-  // const { pathname } = useLocation();
+  let { pathname } = useLocation();
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(addRoute({
-      parentPath: '/main/images',
-      route: '/guest',
-      title: 'guestImages',
-    }));
+  const routesTree = useSelector<RootState, RouteObjType>(({ routesTree }) => routesTree);
 
-    dispatch(removeRoute('/main/posts/admin/1'));
-  }, [dispatch]);
+  const b = block('app');
+  if (pathname) {
+    pathname = pathname.replace(/\/$/, "");
+  }
 
-  const state = useSelector<RootState>(({ routesTree }) => routesTree);
-  console.log(state);
+  const handleDeleteButtonClick = (path: string) => {
+    dispatch(removeRoute(path));
+  }
+
+  const flattenTree = flatTree(routesTree);
+  const currentNode = flattenTree.filter(({ route }) => route === pathname)[0];
+  dispatch(setCurrentNode(currentNode));
+  if (currentNode) {
+    themeSwitcher(currentNode.nodes.length);
+  }
+
+  const content = !currentNode
+    ? <h1>This route doesn't exist on the tree of routes</h1>
+    : <>
+        <div className={b('current-routes')}>
+          <NodesTable nodesData={flattenTree} handleDeleteButtonClick={handleDeleteButtonClick}/>
+        </div>
+        <div className={b('current-routes')}>
+          <LinksList path={pathname} nodes={currentNode.nodes}/>
+          <FormAddRoute currentPath={pathname}/>
+        </div>
+      </>
 
   return (
-    <div className="App">
-      <header className="App-header">
+    <div className={b()}>
+      <header className={b('header')}>
+        <Header pathname={pathname}/>
       </header>
-      <h1>Page</h1>
+      <main className={b('content')}>
+        {content}
+      </main>
+      <header className={b('footer')}>
+        <Footer text="This app allows to add and remove routes"/>
+      </header>
     </div>
   )
-
-  /*
-  const proceedTree = (init: any, node: RouteObjType, fn: appliedFunc): void => {
-    const { nodes } = node;
-    const acc = fn(init, node);
-    if (nodes.length !== 0) {
-      nodes.forEach((node) => proceedTree(acc, node, fn));
-    }
-  }
-
-  const flatTree = (tree: RouteObjType): Array<FormattedRouteType> => {
-    const resultArr: Array<FormattedRouteType> = [];
-    const flatFunction = (parentPath: string, node: RouteObjType) => {
-      const { nodes, title, route } = node;
-      resultArr.push({
-        title,
-        route: `${parentPath}${route}`,
-        nodeCount: nodes.length
-      });
-
-      return `${parentPath}${route}`;
-    }
-
-    proceedTree('', tree, flatFunction);
-
-    return resultArr;
-  }
-
-  const flattenTree = flatTree(routesExample);
-
-  const matchNode = (searchPath: string, tree: RouteObjType): null | RouteObjType  => {
-    let matchNode = null;
-
-    const matchFunction = (parentPath: string, node: RouteObjType) => {
-      const { route } = node;
-      const currentPath = `${parentPath}${route}`;;
-      if (currentPath === searchPath) {
-        matchNode = node;
-      }
-
-      return currentPath;
-    }
-
-    proceedTree('', tree, matchFunction);
-
-    return matchNode;
-  }
-
-  const addRouteToTree = (parentPath: string, node: RouteObjType, tree: RouteObjType): void => {
-    const snapTree = JSON.parse(JSON.stringify(tree));
-    const parentNode = matchNode(parentPath, snapTree);
-    if (parentNode !== null) {
-      parentNode.nodes.push(node);
-    }
-  }
-
-  const removeRouteFromTree = (pathToRemove: string, tree: RouteObjType): void => {
-    const snapTree = JSON.parse(JSON.stringify(tree));
-    const parentPath = pathToRemove.split(/\/\w*$/i)[0];
-    const parentNode = matchNode(parentPath, snapTree);
-    const routeNode = matchNode(pathToRemove, snapTree);
-    if (routeNode !== null && parentNode !== null) {
-      const routeNodesArr = routeNode.nodes;
-      parentNode.nodes = [...parentNode.nodes.filter((node) => node !== routeNode), ...routeNodesArr];
-    }
-  }
-
-  removeRouteFromTree('/main/posts/admin', routesExample);
-
-  addRouteToTree('/main/posts', {
-    route: '/3',
-    title: '3rdPost',
-    nodes: [],
-  }, routesExample);
-
-  const content = flattenTree.map(({ route, title, nodeCount }) => {
-    return (
-      <div key={route}>
-        <h3 key={`${route}_text`}>{`Route: ${route}___Title: ${title}___NodesCount: ${nodeCount}`}</h3>
-        <Link to={route} key={`${route}_link`}>{route}</Link>
-        <hr key={`${route}_line`} />
-      </div>
-    )
-  });
-
-  return (
-    <div className="App">
-      <header className="App-header">
-      </header>
-      <h1>{pathname}</h1>
-      {matchNode(pathname, routesExample) ? content : '404'}
-    </div>
-  )
-  */
 }
 
 export default App;

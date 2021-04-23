@@ -1,0 +1,40 @@
+.node-info {
+  width: 100%;
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: flex-start;
+
+  &_bolded {
+    font-weight: bold;
+  }
+
+  &__info {
+    width: 50px;
+    flex: 1 0 auto;
+    margin-right: 5px;
+    overflow: hidden;
+
+    &_size_medium {
+      width: 75px;
+    }
+
+    &_size_long {
+      width: 130px;
+    }
+
+    &_centered {
+      text-align: center;
+    }
+  }
+
+  &__button {
+    width: 50px;
+    background-color: var(--bg-primary);
+    color:  var(--color-primary);
+    cursor: pointer;
+  }
+
+  &__button-placeholder {
+    width: 50px;
+  }
+}

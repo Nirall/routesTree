@@ -1,0 +1,22 @@
+.header {
+  width: 100%;
+  padding: 10px 200px;
+  color: var(--color-primary);
+  background-color: var(--bg-primary);
+
+  @media (max-width: 1200px){
+    padding: 10px;
+  }
+
+  &__title {
+    overflow: hidden;
+  }
+
+  &__button {
+    padding: 5px;
+    font-weight: bold;
+    background-color: var(--color-primary);
+    color: var(--bg-primary);
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,36 @@
+.app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  &__content {
+    margin: 0 200px;
+    padding: 30px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    flex: 1 0 auto;
+    background-color: #ffffff;
+
+    @media (max-width: 1200px){
+      margin: 0;
+      flex-direction: column;
+    }
+
+    @media (max-width: 576px){
+      padding: 5px;
+    }
+  }
+
+  &__current-routes {
+    display: flex;
+    justify-content: space-around;
+    flex-grow: 1;
+    flex-wrap: wrap;
+  }
+
+  &__table {
+    margin: 0 auto;
+  }
+}

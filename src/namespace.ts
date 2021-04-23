@@ -4,10 +4,4 @@ export type RouteObjType = {
   nodes: Array<RouteObjType>;
 }
 
-export type FormattedRouteType = {
-  route: string;
-  title: string;
-  nodeCount: number;
-}
-
-export type appliedFunc = (...args: any) => void;
+export type passFuncType = (parentPath: string, node: RouteObjType) => void;

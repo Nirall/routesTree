@@ -1,0 +1,46 @@
+.form-add-route {
+  width: 380px;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  color: var(--color-secondary);
+
+  &__title {
+    margin: 0 0 10px 0;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  &__row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+  }
+
+  &__field {
+    width: 220px;
+    margin-left: 10px;
+    padding: 5px 10px;
+  }
+
+  &__error {
+    height: 45px;
+    font-weight: bold;
+    color: #e71818;
+    text-align: center;
+  }
+
+  &__button {
+    padding: 5px;
+    text-transform: uppercase;
+    background-color: var(--bg-primary);
+    color:  var(--color-primary);
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: no-drop;
+    }
+  }
+}
