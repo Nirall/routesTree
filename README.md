@@ -1,6 +1,6 @@
 # Routes tree
 
-This is a studing project
+This is a studing project on CRA + Redux + TS
 
 ## Available Scripts
 
