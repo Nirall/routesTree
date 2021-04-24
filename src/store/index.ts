@@ -10,8 +10,6 @@ const rootReducer = combineReducers({
   currentNode
 });
 
-export type RootState = ReturnType<typeof rootReducer>
-
 const persistConfig = {
   storage,
   key: 'routesTree',
@@ -22,4 +20,5 @@ const pReducer = persistReducer<any, any>(persistConfig, rootReducer);
 const store = createStore(pReducer);
 const persistor = persistStore(store);
 
+export type RootState = ReturnType<typeof rootReducer>
 export { persistor, store };

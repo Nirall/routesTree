@@ -40,7 +40,7 @@ const App = () => {
   const content = !currentNode
     ? <h1>This route doesn't exist on the tree of routes</h1>
     : <>
-        <div className={b('current-routes')}>
+        <div className={b('table')}>
           <NodesTable nodesData={flattenTree} handleDeleteButtonClick={handleDeleteButtonClick}/>
         </div>
         <div className={b('current-routes')}>
@@ -57,9 +57,9 @@ const App = () => {
       <main className={b('content')}>
         {content}
       </main>
-      <header className={b('footer')}>
+      <footer className={b('footer')}>
         <Footer text="This app allows to add and remove routes"/>
-      </header>
+      </footer>
     </div>
   )
 }
