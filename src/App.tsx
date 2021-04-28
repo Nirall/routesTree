@@ -1,11 +1,11 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { block } from 'bem-cn';
 
 import './App.scss';
 import { RootState } from './store';
 import { RouteObjType } from './namespace';
-import { flatTree } from './helpers';
+import { flatTree, matchNode } from './helpers';
 import { themeSwitcher } from './theme/themeSwitcher';
 import { removeRoute, setCurrentNode } from './store/actionCreators';
 
@@ -37,8 +37,11 @@ const App = () => {
     themeSwitcher(currentNode.nodes.length);
   }
 
+  const parentPath = pathname.split(/\/\w*$/i)[0];
+  const isParentPathExist = Boolean(matchNode(parentPath, routesTree));
+
   const content = !currentNode
-    ? <h1>This route doesn't exist on the tree of routes</h1>
+    ? <Redirect to={ isParentPathExist ? parentPath : routesTree.route } />
     : <>
         <div className={b('table')}>
           <NodesTable nodesData={flattenTree} handleDeleteButtonClick={handleDeleteButtonClick}/>
